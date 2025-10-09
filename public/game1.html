@@ -45,6 +45,13 @@
 
       let targetX;
       let targetY;
+
+      let img;
+
+
+      function preload(){
+        img = loadImage('')
+      }
       function setup() {
         createCanvas(500, 500);
         background(200);
@@ -55,13 +62,16 @@
       let x = 250;
       let y = 250;
 
+
+
       function draw() {
         background(200);
         circle(targetX,targetY,30,30);
         x += g*0.02;
         y += b*0.02;
         if ( dist(x,y, targetX, targetY) < 10 ) background(0);  // (dist(x,y, targetX, targetY) < 10)
-        circle(x, y, 50);
+        //circle(x, y, 50);
+        image(img,x,y,50,50)
       }
 
     </script>
