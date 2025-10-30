@@ -15,6 +15,60 @@
 <body>
   <h1 style="text-align:center;">🎈 Balloon Game</h1>
   <canvas id="gameCanvas" width="400" height="600"></canvas>
-  <script src="script.js"></script>
+
+  <script>
+    const socket = io();
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let balloonY = 300;
+    let velocity = 0;
+    let beta = 0;
+
+    // 🟢 "sensor" イベントを受け取るように変更！
+    socket.on("sensor", (data) => {
+      if (data && data.b) {
+        beta = parseFloat(data.b);
+      }
+    });
+
+    function update() {
+      // 傾きに応じて上下に動く
+      velocity += -beta / 100;  // 値が大きいほど動きやすくなる
+      velocity *= 0.9; // 慣性
+      balloonY += velocity;
+
+      if (balloonY < 50) balloonY = 50;
+      if (balloonY > 550) balloonY = 550;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 風船のひも
+      ctx.beginPath();
+      ctx.moveTo(200, balloonY + 40);
+      ctx.lineTo(200, balloonY + 100);
+      ctx.strokeStyle = "#555";
+      ctx.stroke();
+
+      // 風船本体
+      ctx.beginPath();
+      ctx.arc(200, balloonY, 40, 0, Math.PI * 2);
+      ctx.fillStyle = "pink";
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    function loop() {
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  </script>
 </body>
 </html>
+
+
