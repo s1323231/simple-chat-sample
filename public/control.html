@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>風船コントローラー</title>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body style="text-align:center; font-family:sans-serif;">
+  <h2>🎈 傾けて風船を操作！</h2>
+  <p>スマホを上に傾けると上昇、下に傾けると下降します。</p>
+  <p id="beta">傾き: 0°</p>
+
+  <script>
+    const socket = io();
+    window.addEventListener("deviceorientation", (e) => {
+      const beta = e.beta; // 前後の傾き（-180〜180）
+      socket.emit("tilt", { beta });
+      document.getElementById("beta").innerText = `傾き: ${beta.toFixed(1)}°`;
+    });
+  </script>
+</body>
+</html>
